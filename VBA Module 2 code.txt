@@ -1,0 +1,73 @@
+Sub StockData()
+For Each ws In Worksheets
+
+'Declare variables
+Dim Ticker As String, WorksheetName As String
+Dim Stock_Volume As Variant, LVolume As Variant
+Dim Change As Double
+Dim Percent_Change As Double
+Dim Start As Variant
+Dim LPercentUP As Double, LPercentDown As Double
+
+Start = 2
+
+WorksheetName = ws.Name
+'Set holding for ticker total
+Stock_Volume = 0
+
+'Set location for each ticker symbol in stock table
+Dim Stock_Table As Integer
+Stock_Table_Row = 2
+
+'find last row of data set worksheets
+
+LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+StockTableLastRow = ws.Cells(Rows.Count, 12).End(xlUp).Row
+
+'create headers for new tables
+ws.Cells(1, 12).Value = "Ticker"
+ws.Cells(1, 13).Value = "Yearly Change"
+ws.Cells(1, 14).Value = "Percent Change"
+ws.Cells(1, 15).Value = "Total Stock Volume"
+ws.Cells(1, 19).Value = "Ticker"
+ws.Cells(1, 20).Value = "Value"
+ws.Cells(2, 18).Value = "Greatest % increase"
+ws.Cells(3, 18).Value = "Greatest % decrease"
+ws.Cells(4, 18).Value = "Greates Total Volume"
+
+
+'Loop through stock data
+Dim i As Variant
+
+For i = 2 To LastRow
+    
+    'check if same ticker symbol and check volume
+    If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+    Ticker = ws.Cells(i, 1).Value
+    Change = (Cells(i, 6) - Cells(Start, 3))
+    Percent_Change = Change / Cells(Start, 3)
+    'For Change and Percent Change functions got help from TA Alex. Thanks a bunch!
+    Start = i + 1
+    Stock_Volume = Stock_Volume + ws.Cells(i, 7).Value
+    'LPercentUP =
+   ' LPercentDown =
+    'LVolume =
+    
+    ws.Range("L" & Stock_Table_Row).Value = Ticker
+    ws.Range("O" & Stock_Table_Row).Value = Stock_Volume
+    ws.Range("M" & Stock_Table_Row).Value = Change
+    ws.Range("N" & Stock_Table_Row).Value = Percent_Change
+    ws.Cells(2, 19).Value = LPercentUP
+    ws.Cells(3, 19).Value = LPercentDown
+    ws.Cells(4, 19).Value = LVolume
+    Stock_Table_Row = Stock_Table_Row + 1
+    
+    Stock_Volume = 0
+    
+Else
+    Stock_Volume = Stock_Volume + ws.Cells(i, 7).Value
+End If
+    
+Next i
+Next ws
+End Sub
